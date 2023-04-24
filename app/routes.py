@@ -26,3 +26,20 @@ def handle_planets():
             "num_moons": planet.num_moons
         })
     return jsonify(planets_response)
+
+@planets_bp.route("/<id>", methods=["GET"])
+def handle_planet(id):
+    # try:
+    id = int(id)
+    # except:
+    #     return {"error message": f"planet {id} is invalid"}, 400
+    
+    for planet in planets:
+        if planet.id == id:
+            return {
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "num_moons": planet.num_moons
+            }
+    # return {"error message": f"planet {id} not found"}, 404
