@@ -10,18 +10,12 @@ class Planet:
         self.num_moons = num_moons
 
     def to_dict(self):
-        return dict(
-                id=self.id,
-                name=self.name,
-                description=self.description,
-                num_moons=self.num_moons
-        )
-        # return {
-        #         "id": self.id,
-        #         "name": self.name,
-        #         "description": self.description,
-        #         "num_moons": self.num_moons
-        #     }
+        return {
+                "id": self.id,
+                "name": self.name,
+                "description": self.description,
+                "num_moons": self.num_moons
+            }
 
 planets = [
     Planet(1, "Mercury", "It's the first planet in our solar system", 0),
