@@ -4,9 +4,9 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
 class Planet:
     def __init__(self, id, name, description, num_moons):
-        self.id = id,
-        self.name = name,
-        self.description = description,
+        self.id = id
+        self.name = name
+        self.description = description
         self.num_moons = num_moons
 
 planets = [
@@ -27,19 +27,20 @@ def handle_planets():
         })
     return jsonify(planets_response)
 
-@planets_bp.route("/<id>", methods=["GET"])
-def handle_planet(id):
-    # try:
-    id = int(id)
-    # except:
-    #     return {"error message": f"planet {id} is invalid"}, 400
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def handle_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except:
+        return {"error message": f"planet {planet_id} is invalid"}, 400
     
     for planet in planets:
-        if planet.id == id:
+        if planet.id == planet_id:
             return {
                 "id": planet.id,
                 "name": planet.name,
                 "description": planet.description,
                 "num_moons": planet.num_moons
             }
-    # return {"error message": f"planet {id} not found"}, 404
+    return {"error message": f"planet {planet_id} not found"}, 404
+
