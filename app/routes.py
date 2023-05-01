@@ -16,6 +16,28 @@ def create_planets():
 
     return make_response(f"Planet {new_planet.name} successfully created, 201")
 
+@planets_bp.route("", methods=["GET"])
+def read_all_planets():
+    planets_response = []
+    planets = Planet.query.all()
+    for planet in planets:
+        planets_response.append(
+            {
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "num_moons": planet.num_moons
+            }
+        )
+    return jsonify(planets_response)
+
+@planets_bp.route("", methods=["PATCH"])
+def update_planet():
+    request_update = request.get_json()
+    update_planet = Planet() #SQLALCHEMY
+
+@planets_bp.route("", methods=["DELETE"])
+
 
 
 # class Planet:
