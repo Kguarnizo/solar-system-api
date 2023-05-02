@@ -31,12 +31,64 @@ def read_all_planets():
         )
     return jsonify(planets_response)
 
-@planets_bp.route("", methods=["PATCH"])
-def update_planet():
-    request_update = request.get_json()
-    update_planet = Planet() #SQLALCHEMY
 
-@planets_bp.route("", methods=["DELETE"])
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def read_one_planet(planet_id):
+    planet = validate_planet(planet_id)
+
+    return jsonify({
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "num_moons": planet.num_moons
+                })
+                
+
+@planets_bp.route("/<planet_id>", methods=["PUT"])
+def update_planet(planet_id):
+    planet = validate_planet(planet_id)
+
+    request_body = request.get_json()
+    planet.name = request_body["name"]
+    planet.description = request_body["description"]
+    planet.num_moons = request_body["num_moons"]
+
+    db.session.commit()
+
+    return make_response(f"Planet {planet.id} successfully updated")
+
+@planets_bp.route("/<planet_id>", methods=["DELETE"])
+def delete_planet(planet_id):
+    planet = validate_planet(planet_id)
+
+    db.session.delete(planet)
+    db.session.commit()
+
+    return make_response(f"Planet {planet.id} successfully deleted")
+
+
+def validate_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except:
+        abort(make_response({"error message": f"planet {planet_id} is invalid"}, 400))
+
+    planet = Planet.query.get(planet_id)
+    
+    
+    if not planet:
+        abort(make_response({"error message": f"planet {planet_id} not found"}, 404))
+    
+    return planet
+
+
+
+# @planets_bp.route("", methods=["PATCH"])
+# def update_planet():
+#     request_update = request.get_json()
+#     update_planet = Planet() #SQLALCHEMY
+
+# @planets_bp.route("", methods=["DELETE"])
 
 
 
@@ -68,21 +120,3 @@ def update_planet():
 #         planets_response.append(planet.to_dict())
 
 #     return jsonify(planets_response)
-
-# @planets_bp.route("/<planet_id>", methods=["GET"])
-# def handle_planet(planet_id):
-#     planet = validate_planet(planet_id)
-
-#     return planet.to_dict()
-    
-
-# def validate_planet(planet_id):
-    # try:
-    #     planet_id = int(planet_id)
-    # except:
-    #     abort(make_response({"error message": f"planet {planet_id} is invalid"}, 400))
-    
-    # for planet in planets:
-    #     if planet.id == planet_id:
-    #         return planet
-    # abort(make_response({"error message": f"planet {planet_id} not found"}, 404))
