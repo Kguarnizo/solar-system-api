@@ -4,21 +4,6 @@ from flask import Blueprint, jsonify, abort, make_response, request
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-#verify if a planet exists
-def validate_planet(planet_id):
-    try:
-        planet_id = int(planet_id)
-    except:
-        abort(make_response({"error message": f"planet {planet_id} is invalid"}, 400))
-    
-    planet = Planet.query.get(planet_id)
-
-    if not planet:
-        abort(make_response({"error message": f"planet {planet_id} not found"}, 404))
-    
-    return planet
-
-#creating new planets to add to the table
 @planets_bp.route("", methods=["POST"])
 def create_planets():
     request_body = request.get_json()
@@ -31,7 +16,6 @@ def create_planets():
 
     return make_response(f"Planet {new_planet.name} successfully created, 201")
 
-#receiving all planets info 
 @planets_bp.route("", methods=["GET"])
 def read_all_planets():
     planets_response = []
@@ -90,7 +74,6 @@ def validate_planet(planet_id):
         abort(make_response({"error message": f"planet {planet_id} is invalid"}, 400))
 
     planet = Planet.query.get(planet_id)
-    
     
     if not planet:
         abort(make_response({"error message": f"planet {planet_id} not found"}, 404))
