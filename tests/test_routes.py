@@ -27,7 +27,7 @@ def test_create_planet_happy_path(client):
         "description": "It's the first planet in our solar system",
         "num_moons": 0
     }
-    
+
     response = client.post("/planets", json=EXPECTED_PLANET)
     response_body = response.get_json()
 
@@ -37,3 +37,32 @@ def test_create_planet_happy_path(client):
     assert actual_planet.name == EXPECTED_PLANET["name"]
     assert actual_planet.description == EXPECTED_PLANET["description"]
     assert actual_planet.num_moons == EXPECTED_PLANET["num_moons"]
+
+
+def test_get_one_planet_id_not_found(client, one_planet):
+    # Act
+    response = client.get("/planets/4")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 404
+    assert response_body == {"error message":"planet 4 not found"}
+
+
+def test_get_all_planets_with_saved_records(client, saved_planets):
+    #Assert
+    EXPECTED_PLANET_ONE_NAME= {"name": "Mercury"}
+    EXPECTED_PLANET_TWO_DESCRIPTION= {"description": "It's the second planet in our solar system"}
+    EXPECTED_PLANET_THREE_NUM_MOONS= {"num_moons": 1}
+
+    response = client.get("/planets", json=EXPECTED_PLANET_ONE_NAME)
+    response_saved_body = response.get_json()
+
+    planet_one = Planet.query.get(1)
+    planet_two = Planet.query.get(2)
+    planet_three = Planet.query.get(3)
+    assert response.status_code == 200
+    assert len(response_saved_body) == 3
+    assert planet_one.name == EXPECTED_PLANET_ONE_NAME["name"]
+    assert planet_two.description == EXPECTED_PLANET_TWO_DESCRIPTION["description"]
+    assert planet_three.num_moons == EXPECTED_PLANET_THREE_NUM_MOONS["num_moons"]

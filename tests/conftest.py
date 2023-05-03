@@ -35,3 +35,20 @@ def one_planet(app):
     db.session.commit()
     return planet
 
+
+@pytest.fixture
+def saved_planets(app, one_planet):
+    # Arrange
+    # planet_one = Planet(name = "Mercury",
+    #     description = "It's the first planet in our solar system",
+    #     num_moons = 0)
+    planet_two = Planet(name = "Venus",
+        description = "It's the second planet in our solar system",
+        num_moons = 0)
+    planet_three = Planet(name = "Earth",
+        description = "It's the third planet in our solar system",
+        num_moons = 1)
+
+    db.session.add_all([one_planet, planet_two, planet_three])
+    db.session.commit()
+
