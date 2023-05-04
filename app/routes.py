@@ -7,12 +7,15 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 @planets_bp.route("", methods=["POST"])
 def create_planets():
     request_body = request.get_json()
-    new_planet = Planet.from_dict(request_body)
-    
-    db.session.add(new_planet)
-    db.session.commit()
+    try:
+        new_planet = Planet.from_dict(request_body)
+        db.session.add(new_planet)
+        db.session.commit()
 
-    return make_response(jsonify(f"Planet {new_planet.name} successfully created"), 201)
+        return make_response(jsonify(f"Planet {new_planet.name} successfully created"), 201)
+    
+    except KeyError as error:
+        abort(make_response({"error message": f"missing required value: {error}"}, 400))
 
 @planets_bp.route("", methods=["GET"])
 def read_all_planets():

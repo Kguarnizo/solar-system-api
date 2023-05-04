@@ -66,3 +66,7 @@ def test_get_all_planets_with_saved_records(client, saved_planets):
     assert planet_one.name == EXPECTED_PLANET_ONE_NAME["name"]
     assert planet_two.description == EXPECTED_PLANET_TWO_DESCRIPTION["description"]
     assert planet_three.num_moons == EXPECTED_PLANET_THREE_NUM_MOONS["num_moons"]
+
+
+def test_create_planet_raises_key_error_with_missing_atr(client, error_planet):
+    
