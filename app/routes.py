@@ -7,28 +7,20 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 @planets_bp.route("", methods=["POST"])
 def create_planets():
     request_body = request.get_json()
-    new_planet = Planet(name = request_body["name"],
-        description = request_body["description"],
-        num_moons = request_body["num_moons"])
-    
-    db.session.add(new_planet)
-    db.session.commit()
+    try:
+        new_planet = Planet.from_dict(request_body)
+        db.session.add(new_planet)
+        db.session.commit()
 
-    return make_response(jsonify(f"Planet {new_planet.name} successfully created"), 201)
+        return make_response(jsonify(f"Planet {new_planet.name} successfully created"), 201)
+    
+    except KeyError as error:
+        abort(make_response({"error message": f"missing required value: {error}"}, 400))
 
 @planets_bp.route("", methods=["GET"])
 def read_all_planets():
-    planets_response = []
     planets = Planet.query.all()
-    for planet in planets:
-        planets_response.append(
-            {
-                "id": planet.id,
-                "name": planet.name,
-                "description": planet.description,
-                "num_moons": planet.num_moons
-            }
-        )
+    planets_response = [planet.to_dict() for planet in planets]
     return jsonify(planets_response)
 
 
@@ -36,12 +28,7 @@ def read_all_planets():
 def read_one_planet(planet_id):
     planet = validate_planet(planet_id)
 
-    return jsonify({
-                "id": planet.id,
-                "name": planet.name,
-                "description": planet.description,
-                "num_moons": planet.num_moons
-                })
+    return jsonify(planet.to_dict())
                 
 
 @planets_bp.route("/<planet_id>", methods=["PUT"])

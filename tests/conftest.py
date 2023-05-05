@@ -52,3 +52,12 @@ def saved_planets(app, one_planet):
     db.session.add_all([one_planet, planet_two, planet_three])
     db.session.commit()
 
+# @pytest.fixture
+# def error_planet(app):
+#     planet =  Planet(
+#         name = "Pluto",
+#         description = "It's the first planet in our solar system"
+#     )
+#     db.session.add(planet)
+#     db.session.commit()
+#     return planet
