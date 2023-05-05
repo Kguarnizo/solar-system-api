@@ -55,7 +55,7 @@ def test_get_all_planets_with_saved_records(client, saved_planets):
     EXPECTED_PLANET_TWO_DESCRIPTION= {"description": "It's the second planet in our solar system"}
     EXPECTED_PLANET_THREE_NUM_MOONS= {"num_moons": 1}
 
-    response = client.get("/planets", json=EXPECTED_PLANET_ONE_NAME)
+    response = client.get("/planets")
     response_saved_body = response.get_json()
 
     planet_one = Planet.query.get(1)
