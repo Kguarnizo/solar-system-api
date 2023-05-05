@@ -1,5 +1,6 @@
 from app import db
 from app.models.planet import Planet
+from app.helper import validate_model
 from flask import Blueprint, jsonify, abort, make_response, request
 
 
@@ -21,8 +22,14 @@ def create_planets():
 @planets_bp.route("", methods=["GET"])
 def read_all_planets():
     name_query = request.args.get("name")
+    description_query = request.args.get("description")
+    num_moons_query = request.args.get("num_moons")
     if name_query:
         planets = Planet.query.filter_by(name = name_query)
+
+    if num_moons_query:
+        planets = Planet.query.filter_by(num_moons = num_moons_query)
+
     else:
         planets = Planet.query.all()
     
@@ -58,17 +65,3 @@ def delete_planet(planet_id):
     db.session.commit()
 
     return make_response(f"Planet {planet.id} successfully deleted")
-
-
-def validate_model(cls,model_id):
-    try:
-        model_id = int(model_id)
-    except:
-        abort(make_response({"error message": f"{cls.__name__} {model_id} is invalid"}, 400))
-
-    model = Planet.query.get(model_id)
-    
-    if not model:
-        abort(make_response({"error message": f"{cls.__name__} {model_id} not found"}, 404))
-    
-    return model

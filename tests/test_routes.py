@@ -80,3 +80,6 @@ def test_create_planet_raises_key_error_with_missing_atr(client):
     assert response.status_code == 400
     assert response_body == {"error message": f"missing required value: 'num_moons'"}, 400
 
+
+    
+

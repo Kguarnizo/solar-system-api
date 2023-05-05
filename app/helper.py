@@ -8,7 +8,7 @@ def validate_model(cls,model_id):
     except:
         abort(make_response({"error message": f"{cls.__name__} {model_id} is invalid"}, 400))
 
-    model = Planet.query.get(model_id)
+    model = cls.query.get(model_id)
     
     if not model:
         abort(make_response({"error message": f"{cls.__name__} {model_id} not found"}, 404))
