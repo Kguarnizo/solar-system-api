@@ -46,7 +46,7 @@ def test_get_one_planet_id_not_found(client, one_planet):
 
     # Assert
     assert response.status_code == 404
-    assert response_body == {"error message":"planet 4 not found"}
+    assert response_body == {"error message":"Planet 4 not found"}
 
 
 def test_get_all_planets_with_saved_records(client, saved_planets):
