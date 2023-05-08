@@ -3,6 +3,7 @@ from app import db
 class Star(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
+    planets = db.relationship("Planet", back_populates="star")
 
     def to_dict(self):
         return {
