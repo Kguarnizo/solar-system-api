@@ -31,7 +31,7 @@ def create_planet(star_id):
     request_body = request.get_json()
     try:
         new_planet = Planet.from_dict(request_body)
-        new_planet.star = star_bp
+        new_planet.star = star
 
         db.session.add(new_planet)
         db.session.commit()
